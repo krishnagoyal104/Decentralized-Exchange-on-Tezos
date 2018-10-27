@@ -1,5 +1,9 @@
 # Decentralized-Exchange-on-Tezos
 
+## Zeronet:
+* The contract has been deployed on the zeronet.
+* Address : KT1MWrcDuFV9bCeXrgziebJN3maQrEjUyqv2  
+ 
 ## Deposit:  
 
 * Tezzies can be deposited using this function.
@@ -17,7 +21,7 @@
 
 ## Trade  
 * This function takes in bytes and a signature as arguments.
-* The market_maker needs to sign the hash of the arguments which is then published by the taker.
+* The market_maker needs to sign the hash of the arguments which is then published by the taker.  
 
 
 
