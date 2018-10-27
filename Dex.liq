@@ -1,10 +1,21 @@
 [%%version 0.401] 
 
-type storage = 
-  { 
-    number : nat;
-    balances : (bytes, nat)map; 
-  } 
+type storage = (bytes, nat)map  
+  
+let%init storage = (Map : (bytes, nat)map);
+  
+
+  contract type BytesContract = sig
+             type storage
+             val%entry main : bytes -> storage -> (operation list * storage)
+           end  
+             
+             
+let%entry main  
+    (parameter : unit)
+    (storage : storage) =  
+  (([] : operation list), storage)
+  
 
 let%entry deposit
     (parameter : unit)  
@@ -17,7 +28,7 @@ let%entry deposit
   |None -> Current.failwith();
   |Some amount_nat_tuple -> 
       let (amount_nat, rem_tez) = amount_nat_tuple in
-      let storage = storage.balances <- Map.add key amount_nat storage.balances in 
+      let storage = Map.add key amount_nat storage in 
       (([] : operation list), storage)
   
 let%entry withdraw
@@ -25,13 +36,13 @@ let%entry withdraw
     (storage : storage) = 
   let sender = Current.sender() in 
   let key = Bytes.pack (sender, 0) in
-  match Map.find key storage.balances with 
+  match Map.find key storage with 
   |None -> Current.failwith "Not enough balance";
   |Some value -> 
       match%nat value-parameter with 
       |Minus m -> Current.failwith ("Not enough balance", m);
       |Plus p ->
-          let storage = storage.balances <- Map.add key p storage.balances in 
+          let storage = Map.add key p storage in 
           let _contract = (Contract.at sender : UnitContract.instance option) in 
           match _contract with
           |None -> Current.failwith();
@@ -49,7 +60,7 @@ let%entry tokenFallback
       let (sender, value) = data in
       let tokenAddress = Current.sender() in 
       let key = Bytes.pack (sender, tokenAddress) in 
-      let storage = storage.balances <- Map.add key value storage.balances in 
+      let storage = Map.add key value storage in 
       (([] : operation list), storage) 
         
 let%entry tokenWithdraw 
@@ -58,20 +69,20 @@ let%entry tokenWithdraw
   let (tokenAddress, amount) = parameter in
   let sender = Current.sender() in
   let key = Bytes.pack (sender, tokenAddress) in
-  match Map.find key storage.balances with 
+  match Map.find key storage with 
   |None -> Current.failwith "Not enough balace";
   |Some value ->
       match%nat value-amount with 
       |Minus m -> Current.failwith ("Not enough balance", m); 
       |Plus p -> 
-          let storage = storage.balances <- Map.add key p storage.balances in
+          let storage = Map.add key p storage in
           let _contract = (Contract.at tokenAddress : BytesContract.instance option) in
           match _contract with 
           |None -> Current.failwith();
           |Some contr -> 
               let args = Bytes.pack(sender, amount, false) in
               let op = Contract.call ~dest:contr ~entry:main ~parameter:(args) ~amount:0tz in
-              (([] : operation list), storage) 
+              (([op]), storage) 
   
 let%entry trade
     (parameter : (bytes * signature))
@@ -89,32 +100,15 @@ let%entry trade
       if success <> true then Current.failwith "Wrong signature";
       let key1 = Bytes.pack (sender, tokenGet) in
       let key2 = Bytes.pack (market_maker, tokenGet) in
-      match Map.find key1 storage.balances with 
+      match Map.find key1 storage with 
       |None -> Current.failwith();
       |Some tokenGet_bal -> 
           match%nat tokenGet_bal - amountGet with 
           |Minus m -> Current.failwith ("Not enough balance", m);
           |Plus p -> 
-              let storage = storage.balances <- Map.add key1 p storage.balances in
-              match Map.find key2 storage.balances with 
+              let storage = Map.add key1 p storage in
+              match Map.find key2 storage with 
               |None -> Current.failwith();
               |Some tokenGet_bal_ -> 
-                  let storage = storage.balances <- Map.add key2 (tokenGet_bal_+amountGet) storage.balances in
+                  let storage = Map.add key2 (tokenGet_bal_+amountGet) storage in
                   (([] : operation list), storage)
-      
-      
-
-
-          
-  
-        
-        
-    
- 
-
-
-  
-  
-  
-  
-         
