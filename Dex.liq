@@ -47,7 +47,7 @@ let%entry withdraw
           match _contract with
           |None -> Current.failwith();
           |Some contr -> 
-              let op = Contract.transfer contr (parameter * 1tz) in
+              let op = Contract.call ~dest:contr ~amount:(parameter * 1tz) () in
               (([op]), storage) 
 
 let%entry tokenFallback
