@@ -2,12 +2,10 @@
 
 ## Zeronet:
 * The contract has been deployed on the zeronet.
-* Address : KT1MWrcDuFV9bCeXrgziebJN3maQrEjUyqv2  
  
 ## Deposit:  
 
 * Tezzies can be deposited using this function.
-* The amount is stored in a map where the key is the owner and token_address(0 for tezzies) compressed into bytes.
 
 ## Withdraw:  
 * To withdraw tezzies.
