@@ -1,7 +1,8 @@
 # Decentralized-Exchange-on-Tezos
 
 ## Zeronet:
-* The contract has been deployed on the zeronet.
+* The contract has been deployed on the zeronet.  
+* Address :  KT1CvW3fKpp4xUercCem8QXN32YeJ4LQUzQP
  
 ## Deposit:  
 
