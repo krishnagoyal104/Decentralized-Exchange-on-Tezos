@@ -1,12 +1,12 @@
 # Decentralized-Exchange-on-Tezos  
 * An implementation of a decentralized exchange on Tezos written in Liquidity and Michelson.  
-* A decentralized exchange is an exchange where tokens can be traded peer to peer without a third party service, using smart contracts.  
+* Tokens can be traded peer to peer using smart contracts without the need for a third party service.  
 * The exchange is built in compliance with ERC223 similar token standard for Tezos :       
 https://github.com/krishnagoyal104/Tezos-Token-Standard
 
 ## Zeronet:
 * The contract has been deployed on the zeronet.  
-* Address :  KT1CvW3fKpp4xUercCem8QXN32YeJ4LQUzQP
+* Address :  KT1FrrU6xUk9qJnu2Y6TyTSyKkQo4PceXRLe
 * The contract can be interacted with using the Liquidity IDE : http://www.liquidity-lang.org/edit  
 
 ## Contract Entry Points:  
