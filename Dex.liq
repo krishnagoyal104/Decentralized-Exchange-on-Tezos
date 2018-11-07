@@ -113,34 +113,29 @@ let%entry trade
       if success <> true then Current.failwith "Wrong signature";                       
       let maker = get_address pub_key in           
       let maker_balance = get_balance(maker, storage) in  
-      let new_maker_balance = match Map.find tokenGet maker_balance.tokens with  
+      let new_maker_balance1 = match Map.find tokenGet maker_balance.tokens with  
         |None -> Map.add tokenGet amountGet maker_balance.tokens    
-        |Some b -> Map.add tokenGet (b + amountGet) maker_balance.tokens in  
-      let new_maker_balance = match Map.find tokenGive maker_balance.tokens with  
+        |Some b -> Map.add tokenGet (b + amountGet) maker_balance.tokens in     
+      let new_maker_balance2 = match Map.find tokenGive maker_balance.tokens with  
         |None -> Current.failwith "Maker doesn't have enough balance"  
         |Some b -> 
             match is_nat (b - amountGive) with  
             |None -> Current.failwith "Maker doesn't have enough balance"  
             |Some n -> Map.add tokenGive n maker_balance.tokens in  
-      let maker_balance = maker_balance.tokens <- new_maker_balance in  
+      let maker_balance = maker_balance.tokens <- new_maker_balance1 in  
+      let maker_balance = maker_balance.tokens <- new_maker_balance2 in  
       let taker_balance = get_balance(taker, storage) in  
-      let new_taker_balance = match Map.find tokenGet taker_balance.tokens with  
+      let new_taker_balance1 = match Map.find tokenGet taker_balance.tokens with  
         |None -> Current.failwith "Taker doesn't have enough balance"  
         |Some b ->  
             match is_nat (b - amountGet) with  
             |None -> Current.failwith "Taker doesn't have enough balance"  
             |Some n -> Map.add taker n taker_balance.tokens in  
-      let new_taker_balance = match Map.find tokenGive taker_balance.tokens with  
+      let new_taker_balance2 = match Map.find tokenGive taker_balance.tokens with  
         |None -> Map.add tokenGive amountGive taker_balance.tokens  
         |Some n -> Map.add tokenGive (amountGive + n) taker_balance.tokens in  
-        let taker_balance = taker_balance.tokens <- new_taker_balance in  
+      let taker_balance = taker_balance.tokens <- new_taker_balance1 in  
+      let taker_balance = taker_balance.tokens <- new_taker_balance2 in  
       let storage = Map.add maker maker_balance storage in  
       let storage = Map.add taker taker_balance storage in  
       (([] : operation list), storage)
-      
-            
-            
-            
-      
-
-          
